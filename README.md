@@ -1,5 +1,5 @@
 # SWIG CMake PHP Example for Windows
-Example on how to build a SWIG Extension for PHP with CMake on Windows.
+Example on how to build a SWIG/PHP Extension with CMake on Windows.
 
 Couldn't find any working example even without CMake for Windows so i created this one ;)
 Hope it helps others.
