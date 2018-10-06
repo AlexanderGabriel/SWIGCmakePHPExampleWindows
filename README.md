@@ -29,3 +29,4 @@ cmake --build .
 ```
 
 Thats it.
+To see all commands, have a look into appveyor.yml
