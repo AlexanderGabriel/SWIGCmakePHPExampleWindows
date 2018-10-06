@@ -9,15 +9,15 @@ environment:
   matrix:
   - THREAD_SAFE: "true"
   - THREAD_SAFE: "false"
-  PHP_VERSION: 7.2.10
-  PHP_BRANCH: 7.2
+  PHP:
+  - PHP_VERSION: 7.2.10
+    PHP_BRANCH: 7.2
 
 shallow_clone: true
 
 build_script:
   - if "%platform%" == "x64" SET VS_FULL=%VS_VERSION% Win64
   - if "%platform%" == "x86" SET VS_FULL=%VS_VERSION%
-  - mkdir C:\projects
 #Build PHP
   - move C:\cygwin C:\cygwin_disabled
   - move C:\cygwin64 C:\cygwin64_disabled
