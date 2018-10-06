@@ -8,9 +8,17 @@ environment:
   VS_VERSION: Visual Studio 15 2017
   matrix:
   - THREAD_SAFE: "true"
+    PHP_BRANCH: "7.2"
+    PHP_VERSION: "7.2.10"
   - THREAD_SAFE: "false"
-  PHP_VERSION: "7.2.10"
-  PHP_BRANCH: "7.2"
+    PHP_BRANCH: "7.2"
+    PHP_VERSION: "7.2.10"
+  - THREAD_SAFE: "true"
+    PHP_BRANCH: "7.1"
+    PHP_VERSION: "7.1.22"
+  - THREAD_SAFE: "false"
+    PHP_BRANCH: "7.1"
+    PHP_VERSION: "7.1.22"
 
 shallow_clone: true
 
