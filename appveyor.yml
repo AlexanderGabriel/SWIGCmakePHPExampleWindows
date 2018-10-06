@@ -1,0 +1,79 @@
+image: Visual Studio 2017
+
+platform:
+- x64
+- x86
+
+environment:
+  matrix:
+# VS 2017
+  - VS_VERSION: Visual Studio 15 2017
+  matrix:
+  - THREAD_SAFE: "true"
+  - THREAD_SAFE: "false"
+  matrix:
+  - PHP_VERSION: 7.2.10
+    PHP_BRANCH: 7.2
+
+shallow_clone: true
+
+build_script:
+  - if "%platform%" == "x64" SET VS_FULL=%VS_VERSION% Win64
+  - if "%platform%" == "x86" SET VS_FULL=%VS_VERSION%
+  - mkdir C:\projects
+#Build PHP
+  - move C:\cygwin C:\cygwin_disabled
+  - move C:\cygwin64 C:\cygwin64_disabled
+  - cd C:\
+  - git clone https://github.com/Microsoft/php-sdk-binary-tools.git php-sdk
+  - cd php-sdk
+  - set VS_VERSION=%VSCMD_VER:~0,2%
+  - set PATH=C:\php-sdk\bin;C:\php-sdk\msys2\usr\bin;%PATH%
+  - set PHP_SDK_ARCH=%platform%
+  - set PHP_SDK_BIN_PATH=C:\php-sdk\bin
+  - set PHP_SDK_MSYS2_PATH=C:\php-sdk\msys2\usr\bin
+  - set PHP_SDK_OS_ARCH=%platform%
+  - set PHP_SDK_PHP_CMD=C:\php-sdk\bin\php\do_php.bat
+  - set PHP_SDK_ROOT_PATH=C:\php-sdk
+  - set PHP_SDK_VC=vc15
+  - set PHP_SDK_VC_DIR=C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC
+  - set PHP_SDK_VC_NUM=15
+  - set INCLUDE=C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.14.26428\ATLMFC\include;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.14.26428\include;C:\Program Files (x86)\Windows Kits\10\include\10.0.17134.0\ucrt;C:\Program Files (x86)\Windows Kits\10\include\10.0.17134.0\shared;C:\Program Files (x86)\Windows Kits\10\include\10.0.17134.0\um;C:\Program Files (x86)\Windows Kits\10\include\10.0.17134.0\winrt;C:\Program Files (x86)\Windows Kits\10\include\10.0.17134.0\cppwinrt;%INCLUDE%
+  - if "%platform%" == "x64" set LIB=C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.14.26428\ATLMFC\lib\x64;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.14.26428\lib\x64;C:\Program Files (x86)\Windows Kits\10\lib\10.0.17134.0\ucrt\x64;C:\Program Files (x86)\Windows Kits\10\lib\10.0.17134.0\um\x64;%LIB%
+  - if "%platform%" == "x64" set LIBPATH=C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.14.26428\ATLMFC\lib\x64;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.14.26428\lib\x64;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.14.26428\lib\x86\store\references;C:\Program Files (x86)\Windows Kits\10\UnionMetadata\10.0.17134.0;C:\Program Files (x86)\Windows Kits\10\References\10.0.17134.0;C:\Windows\Microsoft.NET\Framework64\v4.0.30319;
+  - if "%platform%" == "x86" set LIB=C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.14.26428\ATLMFC\lib;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.14.26428\lib;C:\Program Files (x86)\Windows Kits\10\lib\10.0.17134.0\ucrt;C:\Program Files (x86)\Windows Kits\10\lib\10.0.17134.0\um;%LIB%
+  - if "%platform%" == "x86" set LIBPATH=C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.14.26428\ATLMFC\lib;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.14.26428\lib;C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Tools\MSVC\14.14.26428\lib\x86\store\references;C:\Program Files (x86)\Windows Kits\10\UnionMetadata\10.0.17134.0;C:\Program Files (x86)\Windows Kits\10\References\10.0.17134.0;C:\Windows\Microsoft.NET\Framework64\v4.0.30319;
+  - set VSCMD_ARG_no_logo=yes
+  - set __VSCMD_PREINIT_VCToolsVersion=14.14.26428
+  - set __VSCMD_PREINIT_VS150COMNTOOLS=C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\Tools\
+  - if "%platform%" == "x86" set PHP_SDK_VC_SHELL_CMD="C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat" x86
+  - if "%platform%" == "x64" set PHP_SDK_VC_SHELL_CMD="C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvarsall.bat" amd64
+  - phpsdk_buildtree phpmaster
+  - cd C:\php-sdk\phpmaster\vc%VS_VERSION%\%VSCMD_ARG_TGT_ARCH%
+  - git clone https://github.com/php/php-src.git
+  - cd C:\php-sdk\phpmaster\vc%VS_VERSION%\%VSCMD_ARG_TGT_ARCH%\php-src
+  - git fetch
+  - git checkout tags/php-%PHP_VERSION%
+  - phpsdk_deps --update --branch %PHP_BRANCH%
+  - buildconf
+  - if "%THREAD_SAFE%" == "true" configure --without-dom --without-gd --disable-bcmath --disable-com-dotnet --without-libxml --without-simplexml --without-xml --disable-xmlreader --without-xmlrpc --disable-xmlwriter --disable-calendar --disable-ctype
+  - if "%THREAD_SAFE%" == "false" configure --disable-zts --without-dom --without-gd --disable-bcmath --disable-com-dotnet --without-libxml --without-simplexml --without-xml --disable-xmlreader --without-xmlrpc --disable-xmlwriter --disable-calendar --disable-ctype
+  - nmake
+
+#Build SWIG
+  - cd C:\projects
+  - git clone https://github.com/AlexanderGabriel/swig
+  - mkdir C:\projects\swig\build
+  - cd C:\projects\swig\build
+  - cmake .. -G "NMake Makefiles" -DCMAKE_BUILD_TYPE=Release -Wno-dev
+  - cmake --build .
+  - move swig.exe ..
+
+#Build Example
+  - cd %APPVEYOR_BUILD_FOLDER%
+  - mkdir build
+  - cd build
+  - cmake ..  -G "NMake Makefiles" -DCMAKE_BUILD_TYPE=Release -Wno-dev -DSWIG_EXECUTABLE=C:\projects\swig\swig.exe
+  - cmake --build .
+
+deploy: off
