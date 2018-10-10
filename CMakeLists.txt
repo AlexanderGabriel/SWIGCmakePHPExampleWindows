@@ -16,8 +16,9 @@ include_directories (C:/php-sdk/phpmaster/vc${VSCMD_VER}/$ENV{VSCMD_ARG_TGT_ARCH
 include_directories (C:/php-sdk/phpmaster/vc${VSCMD_VER}/$ENV{VSCMD_ARG_TGT_ARCH}/php-src/TSRM)
 include_directories (${CMAKE_CURRENT_SOURCE_DIR})
 
-add_library(example STATIC example.c)
+set_property(SOURCE example.i PROPERTY CPLUSPLUS ON)
+add_library(example STATIC example.cxx)
 swig_add_library(php_example TYPE MODULE LANGUAGE php7 SOURCES example.i)
 target_compile_options(php_example PRIVATE /D_WIN32 /D_WINDOWS /DWINDOWS=1 /DZEND_WIN32=1 /DPHP_WIN32=1 /DWIN32 /DNDebug /DNDEBUG /DZEND_DEBUG=0)
-SWIG_LINK_LIBRARIES(php_example "C:/php-sdk/phpmaster/vc${VSCMD_VER}/$ENV{VSCMD_ARG_TGT_ARCH}/php-src/x64/Release/php7.lib")
+SWIG_LINK_LIBRARIES(php_example "C:/php-sdk/phpmaster/vc${VSCMD_VER}/$ENV{VSCMD_ARG_TGT_ARCH}/php-src/$ENV{VSCMD_ARG_TGT_ARCH}/Release/php7.lib")
 target_link_libraries(php_example example)

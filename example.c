@@ -1,7 +1,6 @@
 /* File : example.c */
 
 double  My_variable  = 3.0;
-
 /* Compute factorial of n */
 int  fact(int n) {
     if (n <= 1) return 1;
@@ -12,3 +11,10 @@ int  fact(int n) {
 int my_mod(int n, int m) {
     return(n % m);
 }
+
+int empty = 11;
+
+class webObj {
+  public:
+    int empty = 5;
+};
