@@ -171,9 +171,12 @@ class test_unset {
 $instance = new test_unset;
 echo $instance->unset;
 
-dl("example");
-require_once("example.php");
+//dl("example");
+require_once("build/example.php");
 
-$example = new example();
+class test extends example {
+}
 
-echo $example->empty;
+$empty = new test();
+
+echo "\n\rContent of empty: ".$empty->empty_get();

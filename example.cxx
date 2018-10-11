@@ -13,8 +13,3 @@ int my_mod(int n, int m) {
 }
 
 int empty = 11;
-
-class webObj {
-  public:
-    int empty = 5;
-};
