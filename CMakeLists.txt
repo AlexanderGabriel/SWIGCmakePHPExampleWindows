@@ -26,5 +26,5 @@ target_compile_options(php_example PRIVATE /D_WIN32 /D_WINDOWS /DWINDOWS=1 /DZEN
 if(WITH_THREAD_SAFETY)
 target_compile_options(php_example PRIVATE /DZTS=1)
 endif(WITH_THREAD_SAFETY)
-SWIG_LINK_LIBRARIES(php_example "C:/php-sdk/phpmaster/vc${VSCMD_VER}/$ENV{VSCMD_ARG_TGT_ARCH}/php-src/$ENV{VSCMD_ARG_TGT_ARCH}/Release_TS/php7ts.lib")
+SWIG_LINK_LIBRARIES(php_example "C:/php-sdk/phpmaster/vc${VSCMD_VER}/$ENV{VSCMD_ARG_TGT_ARCH}/php-src/$ENV{VSCMD_ARG_TGT_ARCH}/Release/php7.lib")
 target_link_libraries(php_example example)
